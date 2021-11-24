@@ -1,0 +1,57 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+}
+@using PagedList;
+@using PagedList.Mvc;
+
+<h2>Index</h2>
+@model IPagedList<Shopping.Models.Product>
+   
+ 
+
+<h2><span class="glyphicon glyphicon-list" style="font-size:30px;"></span>Product list</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-8">
+            @using (Html.BeginForm("Index", "FrantEnd", FormMethod.Get))
+            {
+                @Html.AntiForgeryToken()
+                <div class="input-group-right">
+                    @Html.Label("Shop:")<br />
+                    @Html.TextBox("search", null, new { placeholder = "Search" })
+                    <span class="input-group-prepend">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<hr />
+<p>@Html.PagedListPager(Model, page => Url.Action("Index", new { page, search = Request.QueryString["search"] }))</p>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+        <div class="col-sm-3" style="padding:30px;">
+            <img src="@Url.Content(item.ImagePath)" class="img-thumbnail" style="width:200px;height:200px;" />
+            <br />
+           
+            @Html.DisplayNameFor(model => model.First().ProductId):
+            @Html.DisplayFor(modelItem => item.ProductId)<br />
+            @Html.DisplayNameFor(model => model.First().Name):
+            @Html.DisplayFor(modelItem => item.Name)<br />
+            @Html.DisplayNameFor(model => model.First().Price):
+            @Html.DisplayFor(modelItem => item.Price)<br /><br />
+            <a href="@Url.Action("Buy","Shoppingcart",new { id = item.Id })" class="btn btn-warning">Buy Now</a>
+        </div>
+        }
+    </div>
+</div>
+
+<p>@Html.PagedListPager(Model, page => Url.Action("Index", new { page, search = Request.QueryString["search"] }))</p>
+
+<a href="@Url.Action("Buy","Shoppingcart")" class="btn btn-info">Shop Now</a>
